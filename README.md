@@ -1,71 +1,50 @@
-# Graphify Demo
+# Graphify · Knowledge Graph interactivo
 
-Demo de **Graphify** — el knowledge graph que tu IA recorre en vez de hacer grep.
+Demo en vivo del **knowledge graph** de Graphify: el grafo real del repositorio
+[Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify), mapeado
+100% local (tree-sitter AST, 0 tokens de LLM).
 
-Este repo fue mapeado con `graphify . --code-only` (100% local, 0 tokens de LLM). El resultado:
-`graph.json` (grafo completo) + `graph.html` (navegable) + `GRAPH_REPORT.md` (god nodes y comunidades).
+## 🌐 Landing interactiva
 
-## 🌐 Landing
+👉 **[Abrir el grafo interactivo →](https://graphify-demo.vercel.app)**
 
-👉 **[Abrir la landing interactiva →](https://graphify-demo.vercel.app)**
+Haz clic en los nodos, filtra y navega las comunidades (force-directed graph,
+igual que el hero del README de Graphify).
 
-## 🔍 El grafo
+## 📊 El grafo
 
-```mermaid
-graph TD
-    Api --> OrderService
-    Api --> Inventory
-    Api --> Product
-    Api --> User
-    OrderService --> Order
-    Order --> OrderItem
-    OrderItem --> Product
-    Inventory --> Product
-```
+| Métrica | Valor |
+|---|---|
+| Nodos | **11.057** |
+| Aristas | **22.966** |
+| Comunidades | **597** |
+| Conexiones EXTRACTED | **93%** |
+| Costo LLM | **0 tokens** |
 
-- **35 nodos** · **61 aristas** · **5 comunidades**
-- **93% EXTRACTED** (leído del código) · 7% INFERRED (resuelto por graphify)
-- Costo: **0 tokens de LLM** — parseado con tree-sitter AST, local.
-
-## 🚀 Cómo reproducirlo
+## 🚀 Cómo se hizo
 
 ```bash
-uv tool install graphifyy     # instalar CLI
-graphify install               # registrar skill en tu asistente
-
-# construir el grafo de un repo (solo código, local y gratis)
-graphify . --code-only
-
-# generar reporte + graph.html navegable
-graphify cluster-only .
+uv tool install graphifyy
+cd graphify && git clone https://github.com/Graphify-Labs/graphify .
+graphify . --code-only          # grafo local, sin LLM
+graphify cluster-only .         # + GRAPH_REPORT.md y graph.html navegable
 ```
 
-## 💬 Consultas (salida real)
+Nota: para `graph.html` de grafos >5.000 nodos se sube el límite con
+`GRAPHIFY_VIZ_NODE_LIMIT=20000`.
+
+## 💬 Consultas reales
 
 ```bash
-graphify explain OrderService
-# --> .checkout() [method] [EXTRACTED] orders.py:L88
+graphify explain cli.py
+# --> extract() [imports] [EXTRACTED] graphify/cli.py:L3319
+# --> dispatch_command() [contains] [EXTRACTED] graphify/cli.py:L805
 
-graphify path Product Inventory --undirected
-# Product <--imports [EXTRACTED]-- api.py --imports [EXTRACTED]--> Inventory
-```
-
-## 📁 Estructura
-
-```
-graphify-demo/
-├── index.html        # landing con el grafo embebido
-├── graph.html        # knowledge graph interactivo (generado por graphify)
-├── demo_app/         # mini API de ejemplo (órdenes/inventario)
-│   └── src/
-│       ├── orders.py
-│       └── api.py
-└── graphify-out/
-    ├── graph.json    # grafo completo (consultable)
-    └── GRAPH_REPORT.md
+graphify path build_from_json validate_extraction --undirected
+# build_from_json() --calls [EXTRACTED]--> validate_extraction()
 ```
 
 ## 🔗 Referencia
 
 - [Graphify Labs / graphify](https://github.com/Graphify-Labs/graphify)
-- Hecho con el motor [Hermes Agent](https://hermes-agent.nousresearch.com)
+- Hecho con [Hermes Agent](https://hermes-agent.nousresearch.com)
