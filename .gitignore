@@ -1,0 +1,4 @@
+# graphify-out is a generated artifact; commit graph.json/html for the landing demo
+.venv/
+__pycache__/
+*.pyc

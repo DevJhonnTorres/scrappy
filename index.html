@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graphify · Knowledge Graph Demo</title>
+<style>
+  :root{
+    --bg:#0a0e17; --panel:#111827; --border:#1f2937; --txt:#e5e7eb;
+    --muted:#9ca3af; --accent:#6366f1; --green:#10b981; --amber:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+  header{padding:56px 0 32px;border-bottom:1px solid var(--border)}
+  .badge{display:inline-block;background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.4);
+    padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:18px}
+  h1{font-size:42px;letter-spacing:-.5px;margin-bottom:14px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);font-size:17px;max-width:720px}
+  .stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:28px}
+  .stat{flex:1;min-width:140px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+  .stat b{display:block;font-size:30px;color:var(--accent)}
+  .stat span{font-size:13px;color:var(--muted)}
+  section{padding:48px 0;border-bottom:1px solid var(--border)}
+  h2{font-size:26px;margin-bottom:8px}
+  .lead{color:var(--muted);margin-bottom:24px}
+  .graph-frame{width:100%;height:640px;border:1px solid var(--border);border-radius:12px;background:var(--panel);overflow:hidden}
+  .graph-frame iframe{width:100%;height:100%;border:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card pre{background:#0d1420;border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12.5px;
+    overflow-x:auto;color:#c9d1d9;margin-top:12px;white-space:pre-wrap}
+  .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;vertical-align:middle}
+  .tag.ex{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.4)}
+  .tag.in{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.4)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  ul{list-style:none}
+  li{padding:8px 0;border-bottom:1px solid #182131;color:var(--muted);font-size:15px}
+  li b{color:var(--txt)}
+  li::before{content:"→ ";color:var(--accent)}
+  footer{padding:36px 0;color:var(--muted);font-size:14px;text-align:center}
+  a{color:#a5b4fc}
+  .btn{display:inline-block;margin-top:24px;background:var(--accent);color:#fff;padding:12px 24px;border-radius:8px;
+    text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <span class="badge">100% local · AST via tree-sitter · 0 tokens de LLM</span>
+  <h1>Graphify: el <span>knowledge graph</span> que tu IA recorre</h1>
+  <p class="sub">Este repo fue mapeado por <span class="mono">graphify . --code-only</span>. Cada nodo es un concepto, cada conexión está etiquetada <b>EXTRACTED</b> (leída del código) o <b>INFERRED</b> (resuelta por graphify). Haz clic, filtra y navega el grafo abajo — cada respuesta traza a una ruta auditable.</p>
+  <div class="stats">
+    <div class="stat"><b>35</b><span>nodos</span></div>
+    <div class="stat"><b>61</b><span>aristas</span></div>
+    <div class="stat"><b>5</b><span>comunidades</span></div>
+    <div class="stat"><b>93%</b><span>EXTRACTED</span></div>
+  </div>
+  <a class="btn" href="https://github.com/Graphify-Labs/graphify" target="_blank">Ver repo de Graphify →</a>
+</header>
+
+<section class="wrap">
+  <h2>El grafo interactivo</h2>
+  <p class="lead">Navega el repositorio como grafo: haz clic en un nodo para ver sus conexiones, filtra y busca. Generado localmente por <span class="mono">graphify cluster-only .</span></p>
+  <div class="graph-frame">
+    <iframe src="graph.html" title="Graphify knowledge graph"></iframe>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Consultas reales sobre el grafo</h2>
+  <p class="lead">Salida literal de <span class="mono">graphify explain</span> y <span class="mono">graphify path</span> sobre <span class="mono">graph.json</span>. Cada respuesta se remonta a un archivo y línea exacta.</p>
+  <div class="grid">
+    <div class="card">
+      <h3><span class="mono">graphify explain OrderService</span></h3>
+      <p style="font-size:13px;color:var(--muted)">Nodo central: coordina inventario y cumplimiento de órdenes (grado 9).</p>
+      <pre>&lt;-- Api [uses] <span class="tag in">INFERRED</span> api.py:L14
+&lt;-- api.py [imports] <span class="tag ex">EXTRACTED</span> api.py:L6
+&lt;-- .__init__() [calls] <span class="tag ex">EXTRACTED</span> api.py:L14
+--&gt; .create_order() [method] <span class="tag ex">EXTRACTED</span> orders.py:L83
+--&gt; .checkout() [method] <span class="tag ex">EXTRACTED</span> orders.py:L88
+--&gt; .get_order() [method] <span class="tag ex">EXTRACTED</span> orders.py:L95</pre>
+    </div>
+    <div class="card">
+      <h3><span class="mono">graphify path Product Inventory</span></h3>
+      <p style="font-size:13px;color:var(--muted)">La ruta más corta entre dos conceptos, hop a hop, auditable.</p>
+      <pre>Product &lt;--imports [EXTRACTED]-- api.py
+       --imports [EXTRACTED]--&gt; Inventory
+
+(2 hops · 100% EXTRACTED)</pre>
+    </div>
+    <div class="card">
+      <h3><span class="mono">graphify path Order checkout</span></h3>
+      <p style="font-size:13px;color:var(--muted)">1 hop directo: referencia a método, sin ambigüedad.</p>
+      <pre>Order &lt;--references [EXTRACTED]-- .checkout()
+
+(1 hop · EXTRACTED)</pre>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Lo que mapea</h2>
+  <ul>
+    <li><b>Código gratis y local</b> — parseado con tree-sitter AST, determinista, nada sale de tu máquina.</li>
+    <li><b>Cada conexión explicada</b> — <span class="tag ex">EXTRACTED</span> (explícita en el código) o <span class="tag in">INFERRED</span> (resuelta por graphify).</li>
+    <li><b>No es un índice vectorial</b> — sin embeddings ni vector store: un grafo real que recorres.</li>
+    <li><b>God nodes</b> — los conceptos más conectados, para ver por dónde fluye todo.</li>
+    <li><b>Comunidades</b> — el grafo dividido en subsistemas (Leiden).</li>
+    <li><b>Enlaces cross-file</b> — <span class="mono">calls</span> / <span class="mono">imports</span> / <span class="mono">inherits</span> resueltos en ~40 lenguajes.</li>
+  </ul>
+</section>
+
+<footer class="wrap">
+  Demo de <a href="https://github.com/Graphify-Labs/graphify" target="_blank">Graphify</a> · repo de demo: <span class="mono">DevJhonnTorres/graphify-demo</span> · periodo 2026B USC
+</footer>
+
+</body>
+</html>
