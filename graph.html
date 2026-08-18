@@ -341,5 +341,22 @@ network.on('afterDrawing', function(ctx) {
     });
 });
 </script>
+<style>
+  /* ===== Scrappy mobile support ===== */
+  #scrappy-mobile-btn{
+    display:none;position:fixed;right:14px;bottom:14px;z-index:9999;width:52px;height:52px;border-radius:50%;
+    background:#6366f1;color:#fff;border:none;box-shadow:0 4px 14px rgba(99,102,241,.5);font-size:22px;
+    align-items:center;justify-content:center;cursor:pointer;font-family:-apple-system,Segoe UI,sans-serif}
+  @media(max-width:820px){
+    #sidebar{position:fixed;top:0;right:-100%;width:86%;max-width:340px;height:100vh;z-index:9998;
+      transition:right .28s ease;border-left:1px solid #2a2a4e;box-shadow:-8px 0 24px rgba(0,0,0,.5)}
+    #sidebar.open{right:0}
+    #scrappy-mobile-btn{display:flex}
+    #graph{width:100%}
+    body{padding:0}
+    #stats,.stats{display:none}
+  }
+</style>
+<div id="scrappy-mobile-btn" onclick="var s=document.getElementById('sidebar');s.classList.toggle('open');this.textContent=s.classList.contains('open')?'✕':'☰';" aria-label="Toggle panel">☰</div>
 </body>
 </html>
